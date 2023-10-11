@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react'
+import React from 'react'
+import One from './Components/One'
+import As from './Components/A1'
+import { createContext } from 'react'
 
-function App() {
+
+
+export const ApiData = createContext();
+
+const App = () => {
+  const [data, setData] = useState([])
+
+  async function getData() {
+    let response = await fetch('https://jsonplaceholder.typicode.com/users')
+    response = await response.json()
+    console.log(response)
+    setData(response)
+  }
+
+
+  useEffect(() => {
+    getData()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      {data.length === 0 ? <h1>Loading</h1> : <ApiData.Provider value={data}>
+        <One />
+        <As />
+      </ApiData.Provider>}
+    </>
+  )
 }
 
 export default App;
